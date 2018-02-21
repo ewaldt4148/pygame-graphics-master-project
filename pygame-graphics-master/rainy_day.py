@@ -1,7 +1,7 @@
 # Computer Programming 1
 # Unit 11 - Graphics
 #
-# A scene that uses loops to make stars and make a picket fence.
+# A candy game set up 
 
 
 # Imports
@@ -9,6 +9,7 @@ import pygame
 import random
 
 # Initialize game engine
+pygame.mixer.pre_init()
 pygame.init()
 
 # Images
@@ -19,17 +20,20 @@ candy_piece = pygame.image.load('candy_piece.png')
 tide = pygame.image.load('tide_pod.png')
 basket = pygame.image.load('Basket.png')
 bunny = pygame.image.load('bunny.png')
-falling_candy = [candy_cane, mint, candy_piece, tide]
+flower = pygame.image.load('flower.png')
+flower_1 = pygame.image.load('flower_1.png')
+flowers = [flower, flower_1]
+falling_candy = [ mint, candy_piece, tide]
 #Window
 SIZE = (800, 600)
-TITLE = "Rainy Day"
+TITLE = "Candy Game"
 screen = pygame.display.set_mode(SIZE)
 pygame.display.set_caption(TITLE)
 pause = pygame.Surface([600, 800])
 pause.fill([0, 0, 0])
 # Timer
 clock = pygame.time.Clock()
-refresh_rate = 30
+refresh_rate = 60
 
 #Fonts
 MY_FONT = pygame.font.Font(None, 50)
@@ -104,6 +108,13 @@ for i in range(20):
     a = [x, y,c]
     
     sweet.append(a)
+flower_timer = 0
+frames = 0
+ticks = 0
+
+# Sound Effects
+pygame.mixer.music.load("music.ogg")
+
 
 sparkles = False
 pa = False
@@ -112,6 +123,9 @@ start = True
 speed = 0
 xpos = 250
 # Game loop
+
+pygame.mixer.music.play(-1)
+
 done = False    
 
 while not done:
@@ -136,15 +150,11 @@ while not done:
                 pa = not pa
 
     # Game logic
-    for c in clouds:
-        draw_cloud(c, PINK)
-        c[0] += 2
-
-        if c[0] > 800:
-           c[0] = random.randrange(-1600, -100)
-           c[1] = random.randrange(-50, 200)
-           
-    
+    ticks += 1
+    if ticks % 30 == 0:
+        frames += 1
+        if frames > 1:
+            frames = 0 
 
 
 
@@ -169,13 +179,21 @@ while not done:
     pygame.draw.line(screen, WHITE, [0, 390], [800, 390], 5)
     pygame.draw.line(screen, WHITE, [0, 410], [800, 410], 5)  
 
-    draw_bask(xpos)
-    if(xpos + speed) <= 0:
-        speed = 0
-    elif(xpos + speed) >= 600:
-        speed = 0 
-    else:
-        xpos += speed
+    'flowers'
+    y = 350
+    for x in range(-100, 800, 100):
+            screen.blit(flowers[frames], ( x, y))
+   
+
+
+    draw_bask(xpos)     
+    if not pa:
+        if(xpos + speed) <= 0:
+            speed = 0
+        elif(xpos + speed) >= 600:
+            speed = 0 
+        else:
+            xpos += speed
         
     if pa:
         for c in far_clouds:
@@ -233,6 +251,8 @@ while not done:
 
     if pa:
         screen.blit(pause, [0,0])
+
+
         
     # Update screen
     pygame.display.flip()
