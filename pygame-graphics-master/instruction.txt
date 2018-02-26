@@ -1,0 +1,7 @@
+Instructions
+space- to access start screen
+enter- to pause
+right arrow - bunny goes right
+left arrow - bunny goes left
+m - candy falls
+s - sparkles 
